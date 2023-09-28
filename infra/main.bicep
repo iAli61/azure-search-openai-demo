@@ -20,7 +20,19 @@ param searchServiceResourceGroupLocation string = location
 param searchServiceSkuName string = 'standard'
 param searchIndexName string // Set in main.parameters.json
 
+@description('Object containing Bot parameters.')
+param botSettings object
+
+@description('String containing Bot client secrets.')
+@secure()
+param botSettingsClientSecret string
+
 param storageAccountName string = ''
+param cosmodbName string = ''
+param keyVaultName string = ''
+param botServiceName string = ''
+param logAnalyticsWorkspaceName string = ''
+param appInsightsName string = ''
 param storageResourceGroupName string = ''
 param storageResourceGroupLocation string = location
 param storageContainerName string = 'content'
@@ -100,10 +112,32 @@ module appServicePlan 'core/host/appserviceplan.bicep' = {
   }
 }
 
+// Deploy Log Analytics
+module logAnalyticsWorkspace 'core/monitor/log-analytics-workspace.bicep' = {
+  name: 'log-analytics-deployment'
+  scope: resourceGroup
+  params: {
+    name: !empty(logAnalyticsWorkspaceName) ? logAnalyticsWorkspaceName : 'log-${resourceToken}'
+    location: location
+  }
+}
+
+// Deploy Application Insights
+module appInsights 'core/monitor/app-insights.bicep' = {
+  name: 'app-insights-deployment'
+  scope: resourceGroup
+  params: {
+    appInsightsName: !empty(appInsightsName) ? appInsightsName : 'appInsights-${resourceToken}'
+    location: location
+    workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+  }
+}
+
 // The application frontend
 module backend 'core/host/appservice.bicep' = {
   name: 'web'
   scope: resourceGroup
+  dependsOn: [ appInsights, appServicePlan, keyvault]
   params: {
     name: !empty(backendServiceName) ? backendServiceName : '${abbrs.webSitesAppService}backend-${resourceToken}'
     location: location
@@ -123,6 +157,9 @@ module backend 'core/host/appservice.bicep' = {
       AZURE_OPENAI_GPT_DEPLOYMENT: gptDeploymentName
       AZURE_OPENAI_CHATGPT_DEPLOYMENT: chatGptDeploymentName
       AZURE_OPENAI_EMB_DEPLOYMENT: embeddingDeploymentName
+      applicationInsightsConnectionString: appInsights.outputs.appInsightsConnectionString
+      applicationInsightsKey: appInsights.outputs.appInsightsKey
+      keyVault_Uri: keyvault.outputs.keyVaultUri
     }
   }
 }
@@ -231,6 +268,97 @@ module storage 'core/storage/storage-account.bicep' = {
     ]
   }
 }
+
+// Deploy key vault
+module keyvault 'core/key-vault/key-vault.bicep' = {
+  name: 'keyvault-deployment'
+  scope: resourceGroup
+  params: {
+    kvName: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
+    location: location
+    skuName: 'Standard'
+    tenantId: tenant().tenantId
+    publicNetworkAccess : 'Enabled'
+  }
+}
+
+// Cosmos DB
+module cosmosdb 'core/cosmosdb/cosmosdb.bicep' = {
+  name: 'cosmosdb-deployment'
+  scope: resourceGroup
+  params: {
+    cosmosdbName: !empty(cosmodbName) ? cosmodbName : '${abbrs.documentDBDatabaseAccounts}${resourceToken}'
+    location: location
+    kvName: keyvault.outputs.kvName
+    publicNetworkAccess: 'Disabled'
+  }
+}
+
+// Create bot
+module keyvaultSecretBotClientSecret 'core/key-vault/keyvault-secret.bicep' = {
+  name: 'kv-secret-bot-client-secret'
+  scope: resourceGroup
+  dependsOn: [ keyvault ]
+  params: {
+    kvName: keyvault.outputs.kvName
+    secretName: 'botClientSecret'
+    secretValue: botSettingsClientSecret
+  }
+}
+
+module bot 'core/azure-bot/azure-bot.bicep' = {
+  name: 'bot-deployment'
+  scope: resourceGroup
+  dependsOn: [ keyvault, botAppService ]
+  params: {
+    botServicesName: !empty(botServiceName) ? botServiceName : 'bot-${resourceToken}'
+    clientId: botSettings.clientId 
+    // clientSecret: botSettingsClientSecret
+    developerAppInsightKey: appInsights.outputs.appInsightsKey
+    displayName: botSettings.displayName
+    endpoint: botAppService.outputs.botMessagesEndpoint
+    tenantId: tenant().tenantId
+    iconUrl: ''
+    // tokenExchangeUrl: botSettings.tokenExchangeUrl
+    keyVaultName: keyvault.outputs.kvName
+    appType: botSettings.appType
+  }
+}
+
+module botAppService 'core/app/bot-app-service.bicep' = {
+  name: 'bot-app-service-deployment'
+  scope: resourceGroup
+  dependsOn: [ appInsights, appServicePlan, keyvault]
+  params: {
+    botWebappName: botSettings.botWebappName
+    companyName: botSettings.companyName
+    applicationInsightsConnectionString: appInsights.outputs.appInsightsConnectionString
+    applicationInsightsKey: appInsights.outputs.appInsightsKey
+    appServicePlanId: appServicePlan.outputs.appServicePlanResourceId
+    botDisplayName: botSettings.displayName
+    directLineSecretName: 'directChannelKey'
+    keyVaultName: keyvault.outputs.kvName
+    location: location
+    microsoftAppPasswordSecretName: 'botClientSecret'
+    microsoftAppId: botSettings.clientId
+    openAiDeployment: botSettings.openAiDeployment
+    appType: botSettings.appType
+    tenantId: tenant().tenantId
+  }
+}
+
+module botAppServiceKvRoleAssignment 'core/role-assignment/role-assignment-kv.bicep' = {
+  name: 'botappservice-kv-role-assignment'
+  dependsOn: [ botAppService, keyvault ]
+  scope: resourceGroup
+  params: {
+    principalIds: [ botAppService.outputs.managedIdentityPrincipalId ]
+    roleDefinitionIdOrName: 'Key Vault Secrets User'
+    principalType: 'ServicePrincipal'
+    keyVaultName: keyvault.outputs.kvName
+  }
+}
+
 
 // USER ROLES
 module openAiRoleUser 'core/security/role.bicep' = {

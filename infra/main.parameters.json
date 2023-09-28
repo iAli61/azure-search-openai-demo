@@ -55,6 +55,21 @@
     },
     "gptDeploymentName": {
       "value": "${AZURE_OPENAI_GPT_DEPLOYMENT=davinci}"
+    },
+    "botSettingsClientSecret": {
+      "value": "${AZURE_BOT_SETTINGS_CLIENT_SECRET}"
+    },
+    "botSettings": {
+      "value": {
+        "botServicesName": "mvpbot1",
+        "botWebappName": "mvp-bot",
+        "companyName": "Microsoft",
+        "displayName": " Enterprise ChatGPT",
+        "appType": "MultiTenant",
+        "clientId": "${AZURE_BOT_SETTINGS_CLIENT_ID}",
+        "tokenExchangeUrl": "${AZURE_BOT_SETTINGS_TOKEN_EXCHANGE_URL}",
+        "openAiDeployment": "${AZURE_OPENAI_CHATGPT_DEPLOYMENT=chat}"
+      }
     }
   }
 }
