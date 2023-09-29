@@ -39,10 +39,6 @@ resource webapp 'Microsoft.Web/sites@2022-09-01' = {
       ftpsState: 'Disabled'
       appSettings: [
         {
-          name: 'WEBSITE_NODE_DEFAULT_VERSION'
-          value: '10.14.1'
-        }
-        {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
           value: applicationInsightsKey
         }

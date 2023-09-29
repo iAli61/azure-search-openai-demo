@@ -91,3 +91,4 @@ resource appService 'Microsoft.Web/sites@2022-03-01' = {
 output identityPrincipalId string = managedIdentity ? appService.identity.principalId : ''
 output name string = appService.name
 output uri string = 'https://${appService.properties.defaultHostName}'
+output managedIdentityPrincipalId string = appService.identity.principalId

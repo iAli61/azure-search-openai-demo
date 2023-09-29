@@ -36,7 +36,7 @@ param appInsightsName string = ''
 param storageResourceGroupName string = ''
 param storageResourceGroupLocation string = location
 param storageContainerName string = 'content'
-
+param langServiceName string = ''
 param openAiServiceName string = ''
 param openAiResourceGroupName string = ''
 @description('Location for the OpenAI resource group')
@@ -112,6 +112,19 @@ module appServicePlan 'core/host/appserviceplan.bicep' = {
   }
 }
 
+// Deploy key vault
+module keyvault 'core/key-vault/key-vault.bicep' = {
+  name: 'keyvault-deployment'
+  scope: resourceGroup
+  params: {
+    kvName: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
+    location: location
+    skuName: 'Standard'
+    tenantId: tenant().tenantId
+    publicNetworkAccess : 'Enabled'
+  }
+}
+
 // Deploy Log Analytics
 module logAnalyticsWorkspace 'core/monitor/log-analytics-workspace.bicep' = {
   name: 'log-analytics-deployment'
@@ -164,6 +177,18 @@ module backend 'core/host/appservice.bicep' = {
   }
 }
 
+module backendKvRoleAssignment 'core/role-assignment/role-assignment-kv.bicep' = {
+  name: 'backend-kv-role-assignment'
+  dependsOn: [ backend, keyvault ]
+  scope: resourceGroup
+  params: {
+    principalIds: [ backend.outputs.managedIdentityPrincipalId ]
+    roleDefinitionIdOrName: 'Key Vault Secrets User'
+    principalType: 'ServicePrincipal'
+    keyVaultName: keyvault.outputs.kvName
+  }
+}
+
 module openAi 'core/ai/cognitiveservices.bicep' = {
   name: 'openai'
   scope: openAiResourceGroup
@@ -209,6 +234,20 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
         capacity: embeddingDeploymentCapacity
       }
     ]
+  }
+}
+
+// language service
+module lang 'core/lang/lang_service.bicep' = {
+  name: 'lang'
+  scope: resourceGroup
+  params: {
+    name: !empty(langServiceName) ? langServiceName : 'lang-${resourceToken}'
+    location: location
+    tags: tags
+    sku: {
+      name: 'S'
+    }
   }
 }
 
@@ -269,19 +308,6 @@ module storage 'core/storage/storage-account.bicep' = {
   }
 }
 
-// Deploy key vault
-module keyvault 'core/key-vault/key-vault.bicep' = {
-  name: 'keyvault-deployment'
-  scope: resourceGroup
-  params: {
-    kvName: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
-    location: location
-    skuName: 'Standard'
-    tenantId: tenant().tenantId
-    publicNetworkAccess : 'Enabled'
-  }
-}
-
 // Cosmos DB
 module cosmosdb 'core/cosmosdb/cosmosdb.bicep' = {
   name: 'cosmosdb-deployment'
@@ -324,6 +350,7 @@ module bot 'core/azure-bot/azure-bot.bicep' = {
     appType: botSettings.appType
   }
 }
+
 
 module botAppService 'core/app/bot-app-service.bicep' = {
   name: 'bot-app-service-deployment'
