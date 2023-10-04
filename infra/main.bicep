@@ -48,6 +48,7 @@ param openAiServiceName string = ''
 param openAiResourceGroupName string = ''
 @description('Location for the OpenAI resource group')
 @allowed(['canadaeast', 'eastus', 'eastus2', 'francecentral', 'switzerlandnorth', 'uksouth', 'japaneast', 'northcentralus', 'westeurope'])
+
 @metadata({
   azd: {
     type: 'location'
@@ -208,6 +209,17 @@ module backend 'core/host/appservice.bicep' = {
       AZURE_OPENAI_SERVICE: openAiHost == 'azure' ? openAi.outputs.name : ''
       AZURE_OPENAI_CHATGPT_DEPLOYMENT: chatGptDeploymentName
       AZURE_OPENAI_EMB_DEPLOYMENT: embeddingDeploymentName
+      // Used only with non-Azure OpenAI deployments
+      OPENAI_API_KEY: openAiApiKey
+      OPENAI_ORGANIZATION: openAiApiOrganization
+      // Optional login and document level access control system
+      AZURE_USE_AUTHENTICATION: useAuthentication
+      AZURE_SERVER_APP_ID: serverAppId
+      AZURE_SERVER_APP_SECRET: serverAppSecret
+      AZURE_CLIENT_APP_ID: clientAppId
+      AZURE_TENANT_ID: tenant().tenantId
+      // CORS support, for frontends on other hosts
+      ALLOWED_ORIGIN: allowedOrigin
     }
   }
 }
