@@ -9,9 +9,9 @@ param endpoint string
 param iconUrl string = ''
 param displayName string
 param clientId string
-// @secure()
-// param clientSecret string
-// param tokenExchangeUrl string
+@secure()
+param clientSecret string
+param tokenExchangeUrl string
 param keyVaultName string
 
 resource botServices_mvpbot_resource 'Microsoft.BotService/botServices@2022-09-15' = {
@@ -56,43 +56,43 @@ resource botServices_mvpbot_name_MsTeamsChannel 'Microsoft.BotService/botService
 }
 
 
-// resource OAuthBotSettings 'Microsoft.BotService/botServices/connections@2022-09-15' = {
-//   parent: botServices_mvpbot_resource
-//   name: 'OAuthBotSettings'
-//   location: 'global'
-//   sku: {
-//     name: 'S1'
-//   }
-//   kind: 'azurebot'
-//   properties: {
-//     clientId: clientId
-//     clientSecret: clientSecret
-//     scopes: 'openid profile User.Read User.ReadBasic.All'
-//     parameters: [
-//       {
-//         key: 'clientId'
-//         value: clientId
-//       }
-//       {
-//         key: 'clientSecret'
-//         value: clientSecret
-//       }
-//       {
-//         key: 'tokenExchangeUrl'
-//         value: tokenExchangeUrl
-//       }
-//       {
-//         key: 'tenantId'
-//         value: toLower(appType) == 'multitenant' ? 'common' : tenantId
-//       }
-//       {
-//         key: 'scopes'
-//         value: 'openid profile User.Read User.ReadBasic.All'
-//       }
-//     ]
-//     serviceProviderId: '30dd229c-58e3-4a48-bdfd-91ec48eb906c'
-//   }
-// }
+resource OAuthBotSettings 'Microsoft.BotService/botServices/connections@2022-09-15' = {
+  parent: botServices_mvpbot_resource
+  name: 'OAuthBotSettings'
+  location: 'global'
+  sku: {
+    name: 'S1'
+  }
+  kind: 'azurebot'
+  properties: {
+    clientId: clientId
+    clientSecret: clientSecret
+    scopes: 'openid profile User.Read User.ReadBasic.All'
+    parameters: [
+      {
+        key: 'clientId'
+        value: clientId
+      }
+      {
+        key: 'clientSecret'
+        value: clientSecret
+      }
+      {
+        key: 'tokenExchangeUrl'
+        value: tokenExchangeUrl
+      }
+      {
+        key: 'tenantId'
+        value: toLower(appType) == 'multitenant' ? 'common' : tenantId
+      }
+      {
+        key: 'scopes'
+        value: 'openid profile User.Read User.ReadBasic.All'
+      }
+    ]
+    serviceProviderId: '30dd229c-58e3-4a48-bdfd-91ec48eb906c'
+  }
+}
 
 module directChannelSecret '../key-vault/keyvault-secret.bicep' = {
   name: 'kv-secret-direct-channel-deployment'

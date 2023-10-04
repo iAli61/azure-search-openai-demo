@@ -339,13 +339,13 @@ module bot 'core/azure-bot/azure-bot.bicep' = {
   params: {
     botServicesName: !empty(botServiceName) ? botServiceName : 'bot-${resourceToken}'
     clientId: botSettings.clientId 
-    // clientSecret: botSettingsClientSecret
+    clientSecret: botSettingsClientSecret
     developerAppInsightKey: appInsights.outputs.appInsightsKey
     displayName: botSettings.displayName
     endpoint: botAppService.outputs.botMessagesEndpoint
     tenantId: tenant().tenantId
     iconUrl: ''
-    // tokenExchangeUrl: botSettings.tokenExchangeUrl
+    tokenExchangeUrl: botSettings.tokenExchangeUrl
     keyVaultName: keyvault.outputs.kvName
     appType: botSettings.appType
   }

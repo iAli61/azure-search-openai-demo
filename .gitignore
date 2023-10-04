@@ -145,4 +145,4 @@ cython_debug/
 npm-debug.log*
 node_modules
 static/
-mvp-bot/*
+mvp-bot/myapp.zip
