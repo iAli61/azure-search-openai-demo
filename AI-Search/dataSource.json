@@ -1,0 +1,19 @@
+{
+    "@odata.context": "https://chatwithdata505.search.windows.net/$metadata#datasources/$entity",
+    "@odata.etag": "\"0x8DC18EA65AC96B1\"",
+    "name": "customskill",
+    "description": null,
+    "type": "azureblob",
+    "subtype": null,
+    "credentials": {
+      "connectionString": "DefaultEndpointsProtocol=https;AccountName=chatdata505;AccountKey=..."
+    },
+    "container": {
+      "name": "test",
+      "query": "public"
+    },
+    "dataChangeDetectionPolicy": null,
+    "dataDeletionDetectionPolicy": null,
+    "encryptionKey": null,
+    "identity": null
+  }

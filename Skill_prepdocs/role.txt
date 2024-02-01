@@ -1,0 +1,4 @@
+1- Search Service Contributor
+2- storage blob Contributor
+3- Azure AI Developer
+4- Cognitive Services Contributor

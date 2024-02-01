@@ -1,0 +1,64 @@
+{
+  "values": [
+    {
+      "recordId": "0",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Bildungszeit/Bildungszeit%20(Neckarsulm)%20Mitarbeiter%20EN.pdf"
+      }
+    },
+    {
+      "recordId": "1",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Bildungszeit/Bildungszeit%20(Neckarsulm)%20Mitarbeiter.pdf"
+      }
+    },
+    {
+      "recordId": "2",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Bildungszeit/Teilnahmebescheinigung_Bildungszeit.pdf"
+      }
+    },
+    {
+      "recordId": "3",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Sabbatical%20Management%20Expert%20Track/Antrag%20Sabbatical.pdf"
+      }
+    },
+    {
+      "recordId": "4",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Sabbatical%20Management%20Expert%20Track/Informationsblatt%20Sabbatical%20Management%20und%20AT-Kreis.pdf"
+      }
+    },
+    {
+      "recordId": "5",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Sabbatical%20Management%20Expert%20Track/Merkblatt%20Sabbatical%20Management_AT-Kreis.pdf"
+      }
+    },
+    {
+      "recordId": "6",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Sabbatical%20Management%20Expert%20Track/P1%20zur%20BV%20052009%20Sabbatical_Anwendung%20auf%20ET.pdf"
+      }
+    },
+    {
+      "recordId": "7",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Sabbatical%20Management%20Expert%20Track/Steckbrief%20Sabbatical%20-%20Management_Expert%20Track.pdf"
+      }
+    },
+    {
+      "recordId": "8",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Sabbatical%20Mitarbeiter/Antrag%20Sabbatical.pdf"
+      }
+    },
+    {
+      "recordId": "9",
+      "data": {
+        "blob_url": "https://chatdata505.blob.core.windows.net/test/public/Sabbatical%20Mitarbeiter/Antrag%20Sabbatical_englisch.pdf"
+      }
+    }
+  ]
+}

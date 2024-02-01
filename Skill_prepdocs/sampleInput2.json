@@ -1,0 +1,15 @@
+"values": [
+    {
+        "recordId": "1234",
+        "data": {
+            "chunks": {
+                "id": "file-Empfehlung_des_Vorgesetzten_zum_Audi_Mitarbeiter_Stipendium_pdf-456D706665686C756E672064657320566F7267657365747A74656E207A756D2041756469204D697461726265697465722053746970656E6469756D2E706466-page-0",
+                "content": "Audi Mitarbeiterstipendium Empfehlung der Führungskraft zum Audi Mitarbeiterstipendium...",
+                "category": "test",
+                "sourcepage": "Empfehlung des Vorgesetzten zum Audi Mitarbeiter Stipendium.pdf#page=1",
+                "sourcefile": "Empfehlung des Vorgesetzten zum Audi Mitarbeiter Stipendium.pdf",
+                "embedding": [-0.003160822670906782,0.006422713398933411,0.004541543312370777,-0.05904984101653099,-0.023904232308268547,0.04058372601866722,-0.03158540651202202,0.004342667292803526,-0.02536482736468315,-0.019431153312325478,0.026734137907624245,-0.006677013821899891,-0.0011777691543102264,-0.0057445792481303215,-0.0288207046687603,-0.012043403461575508,0.03583678603172302]
+            }
+        }
+    }
+]

@@ -1,0 +1,58 @@
+{
+  "name": "my-skillset",
+  "description": "Skillset for Azure AI Search Indexer",
+  "skills": [
+    {
+      "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+      "name": "#1",
+      "description": "process files in blob storage and create chunks and embeddings",
+      "context": "/document",
+      "uri": "https://afuctcustomskill505.azurewebsites.net/api/embed?code=GStcgWL4hnyNq4yG2bzgkKqPgY-aXbCIGZphVcnPtkITAzFuF-paqA==",
+      "httpMethod": "POST",
+      "timeout": "PT3M50S",
+      "batchSize": 1000,
+      "degreeOfParallelism": null,
+      "inputs": [
+        {
+          "name": "blob_url",
+          "source": "/document/metadata_storage_path"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "chunks",
+          "targetName": "chunks"
+        }
+      ],
+      "httpHeaders": {}
+    }
+  ],
+  "cognitiveServices": null,
+  "knowledgeStore": null,
+  "indexProjections": null,
+  "encryptionKey": null
+}
+
+
+{
+  "@odata.type": "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill",
+  "name": "embedding",
+  "description": "get embeding",
+  "context": "/document/chunks/*",
+  "resourceUri": "https://aoai-sweden-505.openai.azure.com",
+  "apiKey": "dd8805e24cee44eeb9b6b31ff103963d",
+  "deploymentId": "text-embedding-ada-002",
+  "inputs": [
+    {
+      "name": "text",
+      "source": "/document/chunks/*/content"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "embedding",
+      "targetName": "emb"
+    }
+  ],
+  "authIdentity": null
+}

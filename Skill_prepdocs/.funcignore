@@ -1,0 +1,9 @@
+.venv
+AI-Search
+__azurite*
+.vscode
+__blobstorage*
+__pycache__
+__pycache__
+sampleInput*
+test

@@ -1,0 +1,57 @@
+{
+    "name": "my-indexer",
+    "description": null,
+    "dataSourceName": "customskill",
+    "skillsetName": "my-skillset",
+    "targetIndexName": "gptkbindex",
+    "disabled": null,
+    "schedule": {
+      "interval": "PT1H",
+      "startTime": "2024-01-19T13:39:54.387Z"
+    },
+    "parameters": {
+      "batchSize": null,
+      "maxFailedItems": null,
+      "maxFailedItemsPerBatch": null,
+      "base64EncodeKeys": null,
+      "configuration": {
+        "allowSkillsetToReadFileData": true
+      }
+    },
+    "fieldMappings": [],
+    "outputFieldMappings": [
+        {
+            "sourceFieldName": "/document/chunks/*/id",
+            "targetFieldName": "id"
+        },
+        {
+            "sourceFieldName": "/document/chunks/*/content",
+            "targetFieldName": "content",
+            "mappingFunction": null
+        },
+        {
+            "sourceFieldName": "/document/chunks/*/embedding",
+            "targetFieldName": "embedding",
+            "mappingFunction": null
+        },
+        {
+            "sourceFieldName": "/document/chunks/*/category",
+            "targetFieldName": "category",
+            "mappingFunction": null
+        },
+        {
+            "sourceFieldName": "/document/chunks/*/sourcepage",
+            "targetFieldName": "sourcepage",
+            "mappingFunction": null
+        },
+        {
+            "sourceFieldName": "/document/chunks/*/sourcefile",
+            "targetFieldName": "sourcefile",
+            "mappingFunction": null
+        }
+    ],
+    "cache": null,
+    "encryptionKey": null
+  }
+
+  
